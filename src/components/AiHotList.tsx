@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { AiHotItem } from "@/types";
 import ScrollReveal from "@/components/ScrollReveal";
 
@@ -22,20 +22,59 @@ function relativeTime(dateStr: string | null): string {
   return date.toLocaleDateString("zh-CN");
 }
 
-export default function AiHotList({ items }: { items: AiHotItem[] }) {
-  const [visibleCount, setVisibleCount] = useState(
-    Math.min(PAGE_SIZE, items.length)
-  );
+interface AiHotListProps {
+  initialItems: AiHotItem[];
+}
 
-  const visibleItems = items.slice(0, visibleCount);
-  const hasMore = visibleCount < items.length;
-  const remainingCount = items.length - visibleCount;
+export default function AiHotList({ initialItems }: AiHotListProps) {
+  const [items, setItems] = useState<AiHotItem[]>(initialItems);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState(false);
+
+  const loadMore = useCallback(async () => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+    setError(false);
+
+    try {
+      const nextPage = page + 1;
+      const res = await fetch(`/api/ai-hot?page=${nextPage}&pageSize=${PAGE_SIZE}`);
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data = await res.json();
+
+      if (data.items && data.items.length > 0) {
+        // 去重：避免与已有数据重复
+        const existingIds = new Set(items.map((item) => item.id));
+        const newItems = data.items.filter(
+          (item: AiHotItem) => !existingIds.has(item.id)
+        );
+
+        if (newItems.length > 0) {
+          setItems((prev) => [...prev, ...newItems]);
+        }
+        setPage(nextPage);
+        setHasMore(data.hasMore !== false && newItems.length > 0);
+      } else {
+        setHasMore(false);
+      }
+    } catch (err) {
+      console.error("[AiHotList] Failed to load more:", err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, loading, hasMore, items]);
 
   return (
     <>
       {/* 资讯列表 */}
       <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-        {visibleItems.map((item, i) => (
+        {items.map((item, i) => (
           <ScrollReveal key={item.id}>
             <a
               href={item.url}
@@ -118,15 +157,34 @@ export default function AiHotList({ items }: { items: AiHotItem[] }) {
         ))}
       </div>
 
-      {/* 加载更多按钮 */}
-      {hasMore && (
-        <div className="flex justify-center mt-10">
+      {/* 加载状态 / 加载更多 / 错误重试 / 全部加载完 */}
+      <div className="flex justify-center mt-10">
+        {loading ? (
+          <div className="flex items-center gap-2 text-sm" style={{ color: "var(--text-muted)" }}>
+            <span
+              className="inline-block w-3 h-3 rounded-full animate-spin"
+              style={{
+                border: "2px solid rgba(94, 234, 212, 0.2)",
+                borderTopColor: "var(--accent)",
+              }}
+            />
+            正在拉取更多资讯...
+          </div>
+        ) : error ? (
           <button
-            onClick={() =>
-              setVisibleCount((prev) =>
-                Math.min(prev + PAGE_SIZE, items.length)
-              )
-            }
+            onClick={loadMore}
+            className="px-6 py-3 rounded-lg text-sm font-medium transition-all hover:opacity-80"
+            style={{
+              background: "rgba(239, 68, 68, 0.08)",
+              color: "#ef4444",
+              border: "1px solid rgba(239, 68, 68, 0.2)",
+            }}
+          >
+            加载失败，点击重试
+          </button>
+        ) : hasMore ? (
+          <button
+            onClick={loadMore}
             className="px-6 py-3 rounded-lg text-sm font-medium transition-all hover:opacity-80"
             style={{
               background: "rgba(94, 234, 212, 0.08)",
@@ -134,20 +192,17 @@ export default function AiHotList({ items }: { items: AiHotItem[] }) {
               border: "1px solid rgba(94, 234, 212, 0.2)",
             }}
           >
-            加载更多 · 还有 {remainingCount} 条
+            加载更多实时资讯
           </button>
-        </div>
-      )}
-
-      {/* 全部加载完提示 */}
-      {!hasMore && items.length > PAGE_SIZE && (
-        <div
-          className="text-center mt-10 text-xs font-mono"
-          style={{ color: "var(--text-muted)" }}
-        >
-          已展示全部 {items.length} 条资讯
-        </div>
-      )}
+        ) : (
+          <div
+            className="text-center text-xs font-mono"
+            style={{ color: "var(--text-muted)" }}
+          >
+            已展示全部 {items.length} 条资讯
+          </div>
+        )}
+      </div>
     </>
   );
 }
