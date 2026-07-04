@@ -1,0 +1,713 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   PROJECT GRAVEYARD — DESIGN SYSTEM v2.0
+   深空墓园 · 翡翠青绿墓志铭
+   字体: Inter (display+body) + JetBrains Mono (code+numbers)
+   保留: 黑洞动画 · 3D粒子 · 玻璃拟态 · teal签名色
+   ============================================================ */
+
+/* ===== 夜间模式（默认）===== */
+:root {
+  /* — 画布层级 — */
+  --bg-primary: #08090d;
+  --bg-secondary: #0e1015;
+  --bg-tertiary: #14171d;
+  --bg-elevated: #1a1d24;
+
+  /* — 边框 — */
+  --border: rgba(94, 234, 212, 0.10);
+  --border-hover: rgba(94, 234, 212, 0.30);
+  --border-strong: rgba(94, 234, 212, 0.20);
+
+  /* — 文字层级 — */
+  --text-primary: #e8eaed;
+  --text-secondary: #9ca3af;
+  --text-muted: #565d6b;
+  --text-inverse: #08090d;
+
+  /* — 签名强调色（保留 teal）— */
+  --accent: #5EEAD4;
+  --accent-bright: #7FF5E0;
+  --accent-dim: #2DD4BF;
+  --accent-glow: rgba(94, 234, 212, 0.15);
+
+  /* — 玻璃拟态（保留）— */
+  --glass-bg: rgba(14, 16, 21, 0.65);
+  --glass-blur: 16px;
+  --glass-border: 1px solid rgba(94, 234, 212, 0.10);
+  --glass-glow: 0 0 20px rgba(94, 234, 212, 0.06);
+  --glass-hover-glow: 0 0 30px rgba(94, 234, 212, 0.12);
+
+  /* — 输入 — */
+  --input-bg: rgba(94, 234, 212, 0.03);
+  --code-bg: #0e1015;
+
+  /* — 粒子（保留）— */
+  --particle-1: #5EEAD4;
+  --particle-2: #2DD4BF;
+  --particle-3: #7FF5E0;
+
+  /* — 语义色 — */
+  --status-red: #F87171;
+  --status-yellow: #FBBF24;
+  --status-green: #34D399;
+
+  /* — 字体变量（由 next/font 注入）— */
+  --font-inter: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-mono: var(--font-mono), 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* — 间距精度系统 — */
+  --space-xxs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --space-4xl: 40px;
+  --space-5xl: 48px;
+  --space-6xl: 64px;
+  --space-section: 96px;
+
+  /* — 圆角 — */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+
+  /* — 排版层级 — */
+  --text-display: 60px;
+  --text-display-lh: 1.05;
+  --text-display-ls: -0.04em;
+  --text-display-w: 600;
+
+  --text-headline: 36px;
+  --text-headline-lh: 1.15;
+  --text-headline-ls: -0.02em;
+  --text-headline-w: 600;
+
+  --text-title: 24px;
+  --text-title-lh: 1.25;
+  --text-title-ls: -0.01em;
+  --text-title-w: 600;
+
+  --text-subhead: 20px;
+  --text-subhead-lh: 1.4;
+  --text-subhead-ls: 0;
+  --text-subhead-w: 500;
+
+  --text-body-lg: 18px;
+  --text-body-lg-lh: 1.6;
+
+  --text-body: 16px;
+  --text-body-lh: 1.6;
+
+  --text-body-sm: 14px;
+  --text-body-sm-lh: 1.5;
+
+  --text-caption: 12px;
+  --text-caption-lh: 1.4;
+
+  --text-eyebrow: 13px;
+  --text-eyebrow-ls: 0.08em;
+  --text-eyebrow-w: 600;
+}
+
+/* ===== 基础 ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  font-family: var(--font-inter);
+  transition: background 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ===== 滚动条 ===== */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-dim);
+}
+
+/* ===== 选中文本 ===== */
+::selection {
+  background: var(--accent);
+  color: var(--text-inverse);
+}
+
+/* ===== 玻璃拟态工具类（保留）===== */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent),
+    transparent
+  );
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--glass-hover-glow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.glass-card:hover::before {
+  opacity: 1;
+}
+
+.glass-input {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 12px var(--accent-glow);
+  outline: none;
+}
+
+.glass-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ===== 排版工具类 ===== */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.text-eyebrow {
+  font-size: var(--text-eyebrow);
+  font-weight: var(--text-eyebrow-w);
+  letter-spacing: var(--text-eyebrow-ls);
+  text-transform: uppercase;
+}
+
+.text-display {
+  font-size: var(--text-display);
+  font-weight: var(--text-display-w);
+  line-height: var(--text-display-lh);
+  letter-spacing: var(--text-display-ls);
+}
+
+.text-headline {
+  font-size: var(--text-headline);
+  font-weight: var(--text-headline-w);
+  line-height: var(--text-headline-lh);
+  letter-spacing: var(--text-headline-ls);
+}
+
+.text-title {
+  font-size: var(--text-title);
+  font-weight: var(--text-title-w);
+  line-height: var(--text-title-lh);
+  letter-spacing: var(--text-title-ls);
+}
+
+/* ===== 章节分隔线 — 精密渐变 ===== */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-strong) 20%,
+    var(--border-strong) 80%,
+    transparent 100%
+  );
+}
+
+/* ===== 动画（保留全部）===== */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+.pulse-dot {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+@keyframes bounce-arrow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+.scroll-indicator {
+  animation: bounce-arrow 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spin-loading {
+  animation: spin 0.8s linear infinite;
+}
+
+/* ===== 链接 ===== */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: var(--accent-bright);
+}
+
+/* ===== 发光进度条 ===== */
+.glow-bar {
+  box-shadow: 0 0 8px rgba(94, 234, 212, 0.5);
+}
+
+/* ===== 不规则矩形卡片 Masonry 布局 ===== */
+.masonry-grid {
+  column-count: 1;
+  column-gap: 1rem;
+}
+@media (min-width: 640px) {
+  .masonry-grid {
+    column-count: 2;
+    column-gap: 1.25rem;
+  }
+}
+@media (min-width: 1024px) {
+  .masonry-grid {
+    column-count: 3;
+    column-gap: 1.5rem;
+  }
+}
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1.25rem;
+  display: block;
+}
+
+/* 墓碑卡片 — 玻璃拟态 + 顶部光线 */
+.grave-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+.grave-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+.grave-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--glass-hover-glow);
+  transform: translateY(-2px);
+}
+.grave-card:hover::before {
+  opacity: 1;
+}
+
+/* ===== AI HOT 英雄页视频背景 ===== */
+.aihot-hero {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.aihot-hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.aihot-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 9, 13, 0.5) 0%,
+    rgba(8, 9, 13, 0.7) 50%,
+    rgba(8, 9, 13, 0.95) 100%
+  );
+}
+.aihot-hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 80px 24px;
+  max-width: 800px;
+}
+
+/* ===== 黑洞动画（保留全部，不修改）===== */
+@keyframes bh-rotate {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bh-rotate-reverse {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes bh-glow-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.04); }
+}
+
+@keyframes bh-ring-pulse {
+  0%, 100% {
+    box-shadow: 0 0 25px var(--accent), 0 0 50px rgba(94, 234, 212, 0.2), inset 0 0 15px rgba(94, 234, 212, 0.12);
+  }
+  50% {
+    box-shadow: 0 0 40px var(--accent), 0 0 80px rgba(94, 234, 212, 0.4), inset 0 0 25px rgba(94, 234, 212, 0.3);
+  }
+}
+
+/* 黑洞中的玻璃拟态上传按钮 */
+.bh-button {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 38px;
+  padding: 14px 28px;
+  transition: all 0.2s cubic-bezier(.2, .8, .2, 1);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.bh-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(94, 234, 212, 0.3), 0 0 20px rgba(94, 234, 212, 0.2);
+}
+
+.bh-button:active {
+  transform: scale(0.97);
+}
+
+/* 光标粒子轨道旋转 */
+@keyframes cursor-orbit {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== Hero Video Layer ===== */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+/* ===== Grid Lines ===== */
+.hero-grid-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.hero-grid-lines span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(94, 234, 212, 0.08);
+}
+
+/* ===== Central Glow ===== */
+.hero-central-glow {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  max-width: 100%;
+  pointer-events: none;
+  opacity: 0.5;
+  z-index: 1;
+}
+.hero-central-glow svg {
+  width: 100%;
+  height: auto;
+}
+
+/* ===== Hero Gradient Overlay ===== */
+.hero-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(to right, var(--bg-primary) 0%, rgba(8,9,13,0.85) 40%, transparent 100%),
+    linear-gradient(to top, var(--bg-primary) 0%, rgba(8,9,13,0.5) 40%, transparent 70%);
+}
+
+/* ===== Liquid Glass Card ===== */
+.liquid-glass-card {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 8px 32px rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.liquid-glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.4px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(94,234,212,0.35) 0%, rgba(94,234,212,0.05) 100%);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ===== Green Period Glow ===== */
+@keyframes pulse-green-glow {
+  0%, 100% { text-shadow: 0 0 8px rgba(94, 234, 212, 0.3); }
+  50% { text-shadow: 0 0 20px rgba(94, 234, 212, 0.6), 0 0 40px rgba(94, 234, 212, 0.2); }
+}
+.green-period-glow {
+  animation: pulse-green-glow 2s ease-in-out infinite;
+}
+
+/* ===== Glow Breathe ===== */
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+.hero-central-glow ellipse {
+  animation: glow-breathe 6s ease-in-out infinite;
+}
+
+/* ===== Stats Bar ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+.stats-grid-item {
+  background: var(--bg-primary);
+  padding: 24px;
+  text-align: center;
+}
+.stats-grid-number {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+.stats-grid-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+@media (max-width: 768px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ===== Grave Card ===== */
+.grave-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.grave-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+.grave-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ===== Section Header Line ===== */
+.section-header-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border), transparent);
+}
+
+/* ===== Staggered Scroll Reveal ===== */
+@keyframes fade-slide-up {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== CTA Pill ===== */
+.cta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: var(--accent);
+  color: var(--bg-primary);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: 9999px;
+  transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+.cta-pill:hover {
+  background: var(--accent-dim);
+  transform: translateY(-1px);
+  box-shadow: 0 0 32px rgba(94, 234, 212, 0.25);
+}
+
+/* ===== 墓碑卡片 ===== */
+.grave-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: var(--radius-xl);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.grave-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(94, 234, 212, 0.25) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(94, 234, 212, 0.12) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  opacity: 0.6;
+}
+
+.grave-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--glass-hover-glow);
+}
+
+.grave-card:hover::before {
+  opacity: 1;
+}
