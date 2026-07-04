@@ -1,26 +1,10 @@
 import Link from "next/link";
 import type { AiHotItem } from "@/types";
-import ScrollReveal from "@/components/ScrollReveal";
 import AiHotHeroVideo from "@/components/AiHotHeroVideo";
+import AiHotList from "@/components/AiHotList";
 
 // ISR：每 30 分钟重新生成一次，避免每次请求都调用外部 API
 export const revalidate = 1800;
-
-function relativeTime(dateStr: string | null): string {
-  if (!dateStr) return "未知时间";
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
-  const days = Math.floor(diff / 86400000);
-
-  if (minutes < 1) return "刚刚";
-  if (minutes < 60) return `${minutes} 分钟前`;
-  if (hours < 24) return `${hours} 小时前`;
-  if (days < 30) return `${days} 天前`;
-  return date.toLocaleDateString("zh-CN");
-}
 
 // Fallback 数据：当外部 API 不可用时显示，确保页面始终有内容
 const FALLBACK_ITEMS: AiHotItem[] = [
@@ -224,6 +208,206 @@ const FALLBACK_ITEMS: AiHotItem[] = [
     summary: "Devin 2.0 可独立完成需求分析、架构设计、编码、测试和部署，SWE-bench 通过率 23%。",
     category: "AI 工具",
   },
+  {
+    id: "fb-21",
+    title: "OpenAI 推出 GPT-5 mini：轻量化模型 API 价格降低 80%",
+    title_en: null,
+    url: "https://openai.com",
+    source: "OpenAI",
+    publishedAt: new Date(Date.now() - 114 * 3600000).toISOString(),
+    summary: "GPT-5 mini 在保持核心推理能力的同时，推理速度提升 3 倍，适合高并发场景。",
+    category: "大模型",
+  },
+  {
+    id: "fb-22",
+    title: "Hugging Face 推出 SmolLM2：1.7B 参数端侧模型性能惊艳",
+    title_en: null,
+    url: "https://huggingface.co",
+    source: "Hugging Face",
+    publishedAt: new Date(Date.now() - 120 * 3600000).toISOString(),
+    summary: "SmolLM2 在手机端可流畅运行，英文理解能力接近 GPT-3.5，模型仅 3.4GB。",
+    category: "开源模型",
+  },
+  {
+    id: "fb-23",
+    title: "Anthropic 推出 Claude Code：终端内的 AI 编程助手",
+    title_en: null,
+    url: "https://anthropic.com",
+    source: "Anthropic",
+    publishedAt: new Date(Date.now() - 126 * 3600000).toISOString(),
+    summary: "Claude Code 直接在终端运行，支持代码库理解、文件编辑、命令执行和 Git 操作。",
+    category: "AI 工具",
+  },
+  {
+    id: "fb-24",
+    title: "Google Gemini 推出 Deep Research 功能：AI 自主完成深度研究",
+    title_en: null,
+    url: "https://gemini.google.com",
+    source: "Google",
+    publishedAt: new Date(Date.now() - 132 * 3600000).toISOString(),
+    summary: "Gemini Deep Research 可自动浏览数十个网页，生成结构化研究报告，支持多轮迭代。",
+    category: "AI 应用",
+  },
+  {
+    id: "fb-25",
+    title: "Runway Gen-4 发布：电影级 AI 视频生成，支持角色一致性",
+    title_en: null,
+    url: "https://runwayml.com",
+    source: "Runway",
+    publishedAt: new Date(Date.now() - 138 * 3600000).toISOString(),
+    summary: "Gen-4 可在多个镜头中保持角色和场景的一致性，被多家影视公司用于前期制作。",
+    category: "多模态",
+  },
+  {
+    id: "fb-26",
+    title: "AI Agent 框架 CrewAI 1.0 发布：多 Agent 协作生产就绪",
+    title_en: null,
+    url: "https://crewai.com",
+    source: "CrewAI",
+    publishedAt: new Date(Date.now() - 144 * 3600000).toISOString(),
+    summary: "CrewAI 1.0 支持角色定义、任务分配和流程编排，已有 500+ 企业在生产环境使用。",
+    category: "AI 框架",
+  },
+  {
+    id: "fb-27",
+    title: "阿里通义千问 3.0 发布：开源 235B 参数，中文能力全球第一",
+    title_en: null,
+    url: "https://qwenlm.ai",
+    source: "阿里云",
+    publishedAt: new Date(Date.now() - 150 * 3600000).toISOString(),
+    summary: "Qwen3-235B 在 C-Eval、CMMLU 等中文 benchmark 超越所有模型，Apache 2.0 开源。",
+    category: "国产大模型",
+  },
+  {
+    id: "fb-28",
+    title: "OpenAI 推出 Realtime API：支持实时语音对话，延迟低于 300ms",
+    title_en: null,
+    url: "https://openai.com",
+    source: "OpenAI",
+    publishedAt: new Date(Date.now() - 156 * 3600000).toISOString(),
+    summary: "Realtime API 基于 WebSocket 实现全双工语音对话，支持打断、情感识别和语音克隆。",
+    category: "多模态",
+  },
+  {
+    id: "fb-29",
+    title: "GitHub 推出 Spark：自然语言生成完整 GitHub Action 工作流",
+    title_en: null,
+    url: "https://github.com",
+    source: "GitHub",
+    publishedAt: new Date(Date.now() - 162 * 3600000).toISOString(),
+    summary: "Spark 可根据自然语言描述自动生成 CI/CD 配置，支持测试、部署、通知等场景。",
+    category: "开发工具",
+  },
+  {
+    id: "fb-30",
+    title: "Perplexity 推出 Comet 浏览器：AI 原生浏览体验",
+    title_en: null,
+    url: "https://perplexity.ai",
+    source: "Perplexity",
+    publishedAt: new Date(Date.now() - 168 * 3600000).toISOString(),
+    summary: "Comet 浏览器内置 AI 助手，支持页面摘要、跨标签搜索和自动填表，挑战 Chrome。",
+    category: "AI 应用",
+  },
+  {
+    id: "fb-31",
+    title: "Stability AI 推出 Stable Diffusion 4：8K 图像生成与精准控制",
+    title_en: null,
+    url: "https://stability.ai",
+    source: "Stability AI",
+    publishedAt: new Date(Date.now() - 174 * 3600000).toISOString(),
+    summary: "SD4 支持 8K 分辨率输出，新增 ControlNet 风格迁移和多层编辑能力。",
+    category: "多模态",
+  },
+  {
+    id: "fb-32",
+    title: "智谱 GLM-5 发布：国产最强推理模型，数学能力对标 o1",
+    title_en: null,
+    url: "https://zhipuai.cn",
+    source: "智谱AI",
+    publishedAt: new Date(Date.now() - 180 * 3600000).toISOString(),
+    summary: "GLM-5 在 GSM8K 数学推理上达到 95.2%，支持思维链可视化和工具调用。",
+    category: "国产大模型",
+  },
+  {
+    id: "fb-33",
+    title: "Vercel 收购 Tremor：开源 React 图表库将深度集成 Next.js",
+    title_en: null,
+    url: "https://vercel.com",
+    source: "Vercel",
+    publishedAt: new Date(Date.now() - 186 * 3600000).toISOString(),
+    summary: "Tremor 将成为 Vercel 数据可视化方案，与 AI SDK 结合生成动态图表。",
+    category: "行业动态",
+  },
+  {
+    id: "fb-34",
+    title: "ElevenLabs 推出 Voice Cloning 3.0：3 秒音频克隆任意人声",
+    title_en: null,
+    url: "https://elevenlabs.io",
+    source: "ElevenLabs",
+    publishedAt: new Date(Date.now() - 192 * 3600000).toISOString(),
+    summary: "Voice Cloning 3.0 仅需 3 秒参考音频即可生成高保真语音，支持 32 种语言和情感控制。",
+    category: "多模态",
+  },
+  {
+    id: "fb-35",
+    title: "Microsoft 推出 AutoGen 0.4：多 Agent 对话框架全面重构",
+    title_en: null,
+    url: "https://microsoft.github.io/autogen",
+    source: "Microsoft",
+    publishedAt: new Date(Date.now() - 198 * 3600000).toISOString(),
+    summary: "AutoGen 0.4 采用事件驱动架构，支持 Agent 间异步通信、人类反馈和可观测性。",
+    category: "AI 框架",
+  },
+  {
+    id: "fb-36",
+    title: "Notion AI 2.0 上线：全工作流 AI 助手，支持数据库自动分析",
+    title_en: null,
+    url: "https://notion.so",
+    source: "Notion",
+    publishedAt: new Date(Date.now() - 204 * 3600000).toISOString(),
+    summary: "Notion AI 2.0 可自动分析数据库内容生成报表，支持跨页面智能搜索和自动摘要。",
+    category: "AI 应用",
+  },
+  {
+    id: "fb-37",
+    title: "Cohere 推出 Command R+ 2.0：企业级 RAG 专用大模型",
+    title_en: null,
+    url: "https://cohere.com",
+    source: "Cohere",
+    publishedAt: new Date(Date.now() - 210 * 3600000).toISOString(),
+    summary: "Command R+ 2.0 专为企业检索增强生成优化，支持 128K 上下文和多语言 RAG。",
+    category: "大模型",
+  },
+  {
+    id: "fb-38",
+    title: "OpenAI 推出 Swarm 框架：轻量级多 Agent 编排实验项目",
+    title_en: null,
+    url: "https://github.com/openai/swarm",
+    source: "OpenAI",
+    publishedAt: new Date(Date.now() - 216 * 3600000).toISOString(),
+    summary: "Swarm 以极简方式实现多 Agent 协作，通过 handoff 机制传递上下文，适合原型开发。",
+    category: "AI 框架",
+  },
+  {
+    id: "fb-39",
+    title: "AWS Bedrock 支持 Claude 4：企业可一键部署 Anthropic 最新模型",
+    title_en: null,
+    url: "https://aws.amazon.com",
+    source: "AWS",
+    publishedAt: new Date(Date.now() - 222 * 3600000).toISOString(),
+    summary: "Bedrock 支持 Claude 4 全系列模型，企业可通过 API 直接调用，数据不离开 AWS。",
+    category: "AI 基础设施",
+  },
+  {
+    id: "fb-40",
+    title: "AI 编程语言 Mojo 正式开源：Python 语法 + C 性能",
+    title_en: null,
+    url: "https://modular.com",
+    source: "Modular",
+    publishedAt: new Date(Date.now() - 228 * 3600000).toISOString(),
+    summary: "Mojo 开源后开发者可免费使用，AI 推理性能比 Python 快 35000 倍，完全兼容 Python 生态。",
+    category: "开发工具",
+  },
 ];
 
 async function fetchAiHot(): Promise<AiHotItem[]> {
@@ -366,7 +550,7 @@ export default async function AiHotPage() {
           <div className="section-divider" />
         </div>
 
-        {/* 资讯列表 — 竖向，编辑式排版 */}
+        {/* 资讯列表 — 客户端分页组件，支持加载更多 */}
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <svg
@@ -390,89 +574,7 @@ export default async function AiHotPage() {
             </p>
           </div>
         ) : (
-          <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-            {items.map((item, i) => (
-              <ScrollReveal key={item.id}>
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block py-5 transition-all"
-                >
-                  <div className="flex items-start justify-between gap-6">
-                    {/* 左侧：主体 */}
-                    <div className="flex-1 min-w-0">
-                      {/* 序号 + 分类 */}
-                      <div className="flex items-center gap-3 mb-1.5">
-                        <span
-                          className="text-xs font-mono"
-                          style={{ color: "var(--text-muted)" }}
-                        >
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        {item.category && (
-                          <span
-                            className="text-xs px-1.5 py-0.5 rounded"
-                            style={{
-                              color: "var(--accent)",
-                              background: "rgba(94, 234, 212, 0.08)",
-                            }}
-                          >
-                            {item.category}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* 标题 */}
-                      <h2
-                        className="text-base font-medium leading-snug mb-2 transition-colors group-hover:text-accent"
-                        style={{ color: "var(--text-primary)" }}
-                      >
-                        {item.title}
-                      </h2>
-
-                      {/* 摘要 */}
-                      {item.summary && (
-                        <p
-                          className="text-sm leading-relaxed mb-2 line-clamp-2"
-                          style={{ color: "var(--text-secondary)" }}
-                        >
-                          {item.summary}
-                        </p>
-                      )}
-
-                      {/* 来源 + 时间 */}
-                      <div
-                        className="flex items-center gap-3 text-xs"
-                        style={{ color: "var(--text-muted)" }}
-                      >
-                        <span>{item.source}</span>
-                        <span>·</span>
-                        <span>{relativeTime(item.publishedAt)}</span>
-                      </div>
-                    </div>
-
-                    {/* 右侧：箭头 */}
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="shrink-0 mt-1 opacity-0 group-hover:opacity-100 transition-all -translate-x-1 group-hover:translate-x-0"
-                      style={{ color: "var(--accent)" }}
-                    >
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                      <polyline points="12 5 19 12 12 19" />
-                    </svg>
-                  </div>
-                </a>
-              </ScrollReveal>
-            ))}
-          </div>
+          <AiHotList items={items} />
         )}
 
         {/* 分割线 */}
