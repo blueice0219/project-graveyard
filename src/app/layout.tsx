@@ -28,6 +28,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+      <head>
+        {/* 预加载英雄页视频资源，减少首次加载等待 */}
+        <link
+          rel="preload"
+          href="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260411_104032_69319010-2458-492b-b04d-b40a5dfa4482.mp4"
+          as="video"
+          type="video/mp4"
+        />
+      </head>
       <body className="font-sans antialiased">
         <SceneBackground />
         <Header />

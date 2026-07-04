@@ -1,12 +1,10 @@
 import Link from "next/link";
 import type { AiHotItem } from "@/types";
 import ScrollReveal from "@/components/ScrollReveal";
+import AiHotHeroVideo from "@/components/AiHotHeroVideo";
 
 // ISR：每 30 分钟重新生成一次，避免每次请求都调用外部 API
 export const revalidate = 1800;
-
-const HERO_VIDEO_URL =
-  "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260411_104032_69319010-2458-492b-b04d-b40a5dfa4482.mp4";
 
 function relativeTime(dateStr: string | null): string {
   if (!dateStr) return "未知时间";
@@ -145,15 +143,8 @@ export default async function AiHotPage() {
     <>
       {/* ===== Hero — 视频背景 ===== */}
       <section className="aihot-hero">
-        {/* 背景视频 */}
-        <video
-          className="aihot-hero-video"
-          src={HERO_VIDEO_URL}
-          autoPlay
-          muted
-          loop
-          playsInline
-        />
+        {/* 背景视频（含 fallback 渐变 + 淡入过渡） */}
+        <AiHotHeroVideo />
 
         {/* 渐变遮罩 */}
         <div className="aihot-hero-overlay" />

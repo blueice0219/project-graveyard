@@ -382,18 +382,43 @@ a:hover {
   justify-content: center;
   overflow: hidden;
 }
+.aihot-hero-video-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* CSS 渐变 fallback — AI 资讯页视频加载前显示 */
+.aihot-hero-video-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(94, 234, 212, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 60%, rgba(94, 234, 212, 0.05) 0%, transparent 40%),
+    linear-gradient(180deg, #08090d 0%, #0d1117 50%, #08090d 100%);
+  animation: hero-fallback-pulse 4s ease-in-out infinite;
+}
+
 .aihot-hero-video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+}
+
+.aihot-hero-video-loaded {
+  opacity: 1;
 }
 .aihot-hero-overlay {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   background: linear-gradient(
     180deg,
     rgba(8, 9, 13, 0.5) 0%,
@@ -403,7 +428,7 @@ a:hover {
 }
 .aihot-hero-content {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   text-align: center;
   padding: 80px 24px;
   max-width: 800px;
@@ -466,14 +491,43 @@ a:hover {
 }
 
 /* ===== Hero Video Layer ===== */
+.hero-video-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* CSS 渐变 fallback 背景 — 立即显示，视频加载前不空白 */
+.hero-video-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 70% 50%, rgba(94, 234, 212, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 70%, rgba(94, 234, 212, 0.04) 0%, transparent 40%),
+    linear-gradient(135deg, #08090d 0%, #0d1117 40%, #0a0e14 100%);
+  animation: hero-fallback-pulse 4s ease-in-out infinite;
+}
+
+@keyframes hero-fallback-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
 .hero-video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 1.2s ease-in-out;
+}
+
+.hero-video-loaded {
   opacity: 0.6;
-  z-index: 0;
 }
 
 /* ===== Grid Lines ===== */
