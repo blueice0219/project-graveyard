@@ -411,71 +411,37 @@ const FALLBACK_ITEMS: AiHotItem[] = [
 ];
 
 async function fetchAiHot(): Promise<AiHotItem[]> {
-  // 优先从 Hacker News API 获取实时 AI 资讯
+  // 从 aihot.virxact.com 获取实时 AI 资讯（精选模式）
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
 
-    // 获取 HN Top Stories
-    const idsRes = await fetch("https://hacker-news.firebaseio.com/v0/topstories.json", {
-      next: { revalidate: 1800 },
-      signal: controller.signal,
-    });
+    const res = await fetch(
+      "https://aihot.virxact.com/api/public/items?mode=selected&take=20",
+      {
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+          Accept: "application/json",
+        },
+        next: { revalidate: 1800 },
+        signal: controller.signal,
+      }
+    );
     clearTimeout(timeout);
 
-    if (idsRes.ok) {
-      const allIds: number[] = await idsRes.json();
-      // 首页取前 60 条 ID（过滤后约 20 条 AI 相关）
-      const batchIds = allIds.slice(0, 60);
-
-      // 并行获取详情
-      const stories = await Promise.all(
-        batchIds.map((id) =>
-          fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`, {
-            next: { revalidate: 1800 },
-          })
-            .then((r) => r.json())
-            .catch(() => null)
-        )
-      );
-
-      // 过滤 AI 相关 + 映射
-      const AI_KEYWORDS = [
-        "ai", "ai-", "llm", "gpt", "chatgpt", "claude", "gemini", "copilot",
-        "openai", "anthropic", "deepmind", "mistral", "deepseek",
-        "machine learning", "neural", "transformer", "diffusion", "sora",
-        "agent", "agentic", "rag", "embedding", "language model",
-        "generative", "prompt", "inference", "training", "gpu", "nvidia",
-        "hugging face", "langchain", "llama", "qwen", "通义", "豆包", "智谱",
-        "cursor", "devin", "replit", "v0", "mcp", "multimodal",
-      ];
-
-      const aiItems: AiHotItem[] = stories
-        .filter((s: any) => s && s.type === "story" && s.title)
-        .filter((s: any) => {
-          const lower = s.title.toLowerCase();
-          return AI_KEYWORDS.some((kw) => lower.includes(kw));
-        })
-        .map((s: any) => ({
-          id: `hn-${s.id}`,
-          title: s.title,
-          title_en: null,
-          url: s.url || `https://news.ycombinator.com/item?id=${s.id}`,
-          source: "Hacker News",
-          publishedAt: new Date(s.time * 1000).toISOString(),
-          summary: s.descendants > 0 ? `${s.score} 点赞 · ${s.descendants} 评论` : `${s.score} 点赞`,
-          category: "AI",
-        }));
-
-      if (aiItems.length > 0) {
-        return aiItems;
+    if (res.ok) {
+      const data = await res.json();
+      const items = Array.isArray(data?.items) ? data.items : [];
+      if (items.length > 0) {
+        return items;
       }
     }
 
-    console.warn("[AI HOT] HN API unavailable, using fallback data");
+    console.warn("[AI HOT] API unavailable, using fallback data");
     return FALLBACK_ITEMS;
   } catch (error) {
-    console.warn("[AI HOT] Failed to fetch from HN:", error instanceof Error ? error.message : "unknown");
+    console.warn("[AI HOT] Failed to fetch:", error instanceof Error ? error.message : "unknown");
     return FALLBACK_ITEMS;
   }
 }

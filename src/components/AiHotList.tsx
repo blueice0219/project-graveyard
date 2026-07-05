@@ -1,10 +1,19 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import type { AiHotItem } from "@/types";
 import ScrollReveal from "@/components/ScrollReveal";
 
 const PAGE_SIZE = 20;
+
+// category 英文 slug → 中文标签
+const CATEGORY_MAP: Record<string, string> = {
+  "ai-models": "模型发布",
+  "ai-products": "产品发布",
+  industry: "行业动态",
+  paper: "论文研究",
+  tip: "技巧观点",
+};
 
 function relativeTime(dateStr: string | null): string {
   if (!dateStr) return "未知时间";
@@ -28,7 +37,7 @@ interface AiHotListProps {
 
 export default function AiHotList({ initialItems }: AiHotListProps) {
   const [items, setItems] = useState<AiHotItem[]>(initialItems);
-  const [page, setPage] = useState(1);
+  const [cursor, setCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(false);
@@ -40,15 +49,17 @@ export default function AiHotList({ initialItems }: AiHotListProps) {
     setError(false);
 
     try {
-      const nextPage = page + 1;
-      const res = await fetch(`/api/ai-hot?page=${nextPage}&pageSize=${PAGE_SIZE}`);
+      const params = new URLSearchParams({ take: String(PAGE_SIZE) });
+      if (cursor) params.set("cursor", cursor);
+
+      const res = await fetch(`/api/ai-hot?${params.toString()}`);
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const data = await res.json();
 
       if (data.items && data.items.length > 0) {
-        // 去重：避免与已有数据重复
+        // 去重
         const existingIds = new Set(items.map((item) => item.id));
         const newItems = data.items.filter(
           (item: AiHotItem) => !existingIds.has(item.id)
@@ -57,8 +68,8 @@ export default function AiHotList({ initialItems }: AiHotListProps) {
         if (newItems.length > 0) {
           setItems((prev) => [...prev, ...newItems]);
         }
-        setPage(nextPage);
-        setHasMore(data.hasMore !== false && newItems.length > 0);
+        setCursor(data.nextCursor || null);
+        setHasMore(data.hasNext !== false && newItems.length > 0);
       } else {
         setHasMore(false);
       }
@@ -68,7 +79,7 @@ export default function AiHotList({ initialItems }: AiHotListProps) {
     } finally {
       setLoading(false);
     }
-  }, [page, loading, hasMore, items]);
+  }, [cursor, loading, hasMore, items]);
 
   return (
     <>
@@ -101,7 +112,7 @@ export default function AiHotList({ initialItems }: AiHotListProps) {
                           background: "rgba(94, 234, 212, 0.08)",
                         }}
                       >
-                        {item.category}
+                        {CATEGORY_MAP[item.category] || item.category}
                       </span>
                     )}
                   </div>
